@@ -156,8 +156,4 @@ One of the best parts of this challenge is seeing how different people approach 
 
 ### Let's see where Day 45 takes us 🚀
 
-<<<<<<< HEAD
 </div>
-=======
-</div>
->>>>>>> 3d83455 (Set Matrix Zero)
