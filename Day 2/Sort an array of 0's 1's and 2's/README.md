@@ -1,4 +1,4 @@
-# Day 2 - Kadane's Algorithm
+# Day 2 - Sort an Array of 0s, 1s and 2s
 
 > Part of my #SDESheetChallenge journey.
 
@@ -6,17 +6,17 @@
 
 ## 📌 Problem Summary
 
-Given an array of integers, the goal is to find the contiguous subarray with the maximum possible sum.
+This problem gives an array containing only 0s, 1s, and 2s and asks us to sort it in-place.
 
-Instead of checking every possible subarray, the challenge is to identify the maximum sum efficiently, even when the array contains negative numbers.
+The interesting part is that the array contains only three distinct values, which opens the door for solutions better than general-purpose sorting.
 
 ---
 
 ## 🤔 My First Thought
 
-My first instinct was to generate every possible subarray and calculate its sum.
+My first instinct was to simply count how many 0s, 1s, and 2s are present.
 
-It felt like the safest way because I'd definitely cover all cases. The only issue was that the number of subarrays grows quickly, and recalculating sums again and again seemed wasteful.
+Once I know the counts, I can overwrite the array with those values in order. It felt straightforward because the range of values is fixed and very small.
 
 ---
 
@@ -24,13 +24,13 @@ It felt like the safest way because I'd definitely cover all cases. The only iss
 
 ### Idea
 
-Generate every possible subarray using a start and end index. For each subarray, calculate its sum from scratch and keep track of the maximum sum seen so far.
+Count the frequency of 0s, 1s, and 2s in the array. Then overwrite the original array by placing all 0s first, followed by 1s, and then 2s.
 
 ### Complexity
 
 | Metric           | Value |
 | ---------------- | ----- |
-| Time Complexity  | O(N³) |
+| Time Complexity  | O(N)  |
 | Space Complexity | O(1)  |
 
 ### File
@@ -45,13 +45,13 @@ brute_force.py
 
 ### Idea
 
-Instead of recalculating the sum for every subarray, keep a running sum while expanding the ending index. This avoids the third loop and reduces repeated work.
+Use the same counting observation but rewrite the array using index ranges instead of separate filling loops. It slightly improves implementation clarity while keeping the same complexity.
 
 ### Complexity
 
 | Metric           | Value |
 | ---------------- | ----- |
-| Time Complexity  | O(N²) |
+| Time Complexity  | O(N)  |
 | Space Complexity | O(1)  |
 
 ### File
@@ -66,9 +66,13 @@ better.py
 
 ### Key Observation
 
-A negative running sum will only hurt future subarrays. If the current sum becomes negative, it's better to start fresh from the next element.
+Since there are only three possible values, we can maintain three regions in the array:
 
-This simple observation leads to Kadane's Algorithm, which finds the answer in a single pass.
+* Left side for 0s
+* Middle for 1s
+* Right side for 2s
+
+By moving elements into their correct regions during a single traversal, the array gets sorted in-place without counting.
 
 ### Complexity
 
@@ -87,27 +91,29 @@ optimal.py
 
 ## 🧠 Pattern Used
 
-**Greedy + Dynamic Programming**
+**Three Pointers (Dutch National Flag Algorithm)**
 
-At every index, we decide whether to continue the current subarray or start a new one. The decision is made using information from the previous step, which gives it a DP flavor, while always choosing the locally best option makes it greedy.
+The array is partitioned into three sections using `low`, `mid`, and `high` pointers. Each element is placed directly into its correct region while scanning the array once.
+
+This pattern is useful whenever an array contains a small fixed number of categories that need to be grouped efficiently.
 
 ---
 
 ## 💡 What I Learned
 
-* A negative running sum is usually a sign to reset and start fresh.
-* The phrase "maximum subarray" should immediately remind me of Kadane's Algorithm.
-* It's easy to forget that the answer can be negative when all elements are negative.
+* Seeing only `0, 1, 2` is a big clue that a specialized solution may exist.
+* When swapping with the `high` pointer, I shouldn't move `mid` immediately.
+* "Sort in-place" is often a hint that interviewers want the Dutch National Flag approach.
 
 ---
 
 ## 🔍 Complexity Comparison
 
-| Approach    | Time  | Space |
-| ----------- | ----- | ----- |
-| Brute Force | O(N³) | O(1)  |
-| Better      | O(N²) | O(1)  |
-| Optimal     | O(N)  | O(1)  |
+| Approach    | Time | Space |
+| ----------- | ---- | ----- |
+| Brute Force | O(N) | O(1)  |
+| Better      | O(N) | O(1)  |
+| Optimal     | O(N) | O(1)  |
 
 ---
 
@@ -126,9 +132,9 @@ Day-2/
 
 ## 🎯 Interview Reminder
 
-Keywords like **maximum subarray**, **largest contiguous sum**, or **best continuous segment** should make me think about Kadane's Algorithm.
+Keywords like **0s, 1s, 2s**, **three categories**, **in-place sorting**, or **single traversal** should immediately make me think about the Dutch National Flag Algorithm.
 
-If the interviewer asks for an O(N) solution and the problem involves a running sum, checking whether a negative contribution should be discarded is usually a strong hint.
+If the array contains only a few distinct values and extra space is restricted, a pointer-based partitioning solution is usually worth considering.
 
 ---
 

@@ -1,4 +1,4 @@
-# Day 2 - Kadane's Algorithm
+# Day 2 - Best Time to Buy and Sell Stock
 
 > Part of my #SDESheetChallenge journey.
 
@@ -6,17 +6,17 @@
 
 ## 📌 Problem Summary
 
-Given an array of integers, the goal is to find the contiguous subarray with the maximum possible sum.
+Given stock prices for different days, the goal is to find the maximum profit possible by buying once and selling once in the future.
 
-Instead of checking every possible subarray, the challenge is to identify the maximum sum efficiently, even when the array contains negative numbers.
+The challenge is making sure the buy happens before the sell while finding the best profit efficiently.
 
 ---
 
 ## 🤔 My First Thought
 
-My first instinct was to generate every possible subarray and calculate its sum.
+My first instinct was to check every possible buy day and every possible sell day after it.
 
-It felt like the safest way because I'd definitely cover all cases. The only issue was that the number of subarrays grows quickly, and recalculating sums again and again seemed wasteful.
+It felt safe because I'd never miss the best transaction. But pretty quickly, it felt like I was comparing way more pairs than necessary.
 
 ---
 
@@ -24,13 +24,13 @@ It felt like the safest way because I'd definitely cover all cases. The only iss
 
 ### Idea
 
-Generate every possible subarray using a start and end index. For each subarray, calculate its sum from scratch and keep track of the maximum sum seen so far.
+Try every valid buy-sell pair. For each buy day, check all future days as possible selling days and keep track of the maximum profit found.
 
 ### Complexity
 
 | Metric           | Value |
 | ---------------- | ----- |
-| Time Complexity  | O(N³) |
+| Time Complexity  | O(N²) |
 | Space Complexity | O(1)  |
 
 ### File
@@ -43,22 +43,7 @@ brute_force.py
 
 ## ⚡ Better Approach
 
-### Idea
-
-Instead of recalculating the sum for every subarray, keep a running sum while expanding the ending index. This avoids the third loop and reduces repeated work.
-
-### Complexity
-
-| Metric           | Value |
-| ---------------- | ----- |
-| Time Complexity  | O(N²) |
-| Space Complexity | O(1)  |
-
-### File
-
-```text
-better.py
-```
+No meaningful intermediate optimization for this problem.
 
 ---
 
@@ -66,9 +51,9 @@ better.py
 
 ### Key Observation
 
-A negative running sum will only hurt future subarrays. If the current sum becomes negative, it's better to start fresh from the next element.
+Instead of checking every pair, I only need to remember the lowest stock price seen so far.
 
-This simple observation leads to Kadane's Algorithm, which finds the answer in a single pass.
+For each day, I can calculate the profit if I sell today and update the maximum profit. This removes the need for nested loops completely.
 
 ### Complexity
 
@@ -87,17 +72,19 @@ optimal.py
 
 ## 🧠 Pattern Used
 
-**Greedy + Dynamic Programming**
+**Greedy**
 
-At every index, we decide whether to continue the current subarray or start a new one. The decision is made using information from the previous step, which gives it a DP flavor, while always choosing the locally best option makes it greedy.
+At every step, we maintain the minimum price seen so far and use it to calculate the best possible profit for the current day.
+
+The decision is local, but it guarantees the global maximum profit, which makes this a classic Greedy problem.
 
 ---
 
 ## 💡 What I Learned
 
-* A negative running sum is usually a sign to reset and start fresh.
-* The phrase "maximum subarray" should immediately remind me of Kadane's Algorithm.
-* It's easy to forget that the answer can be negative when all elements are negative.
+* "Buy before sell" is more important than just finding the minimum and maximum values.
+* Tracking the minimum value seen so far can eliminate a lot of unnecessary comparisons.
+* A single pass is often enough when the answer depends on previous information only.
 
 ---
 
@@ -105,8 +92,8 @@ At every index, we decide whether to continue the current subarray or start a ne
 
 | Approach    | Time  | Space |
 | ----------- | ----- | ----- |
-| Brute Force | O(N³) | O(1)  |
-| Better      | O(N²) | O(1)  |
+| Brute Force | O(N²) | O(1)  |
+| Better      | —     | —     |
 | Optimal     | O(N)  | O(1)  |
 
 ---
@@ -118,7 +105,6 @@ Day-2/
 │
 ├── README.md
 ├── brute_force.py
-├── better.py
 └── optimal.py
 ```
 
@@ -126,9 +112,9 @@ Day-2/
 
 ## 🎯 Interview Reminder
 
-Keywords like **maximum subarray**, **largest contiguous sum**, or **best continuous segment** should make me think about Kadane's Algorithm.
+Keywords like **maximum profit**, **buy before sell**, **single transaction**, and **best difference** should immediately make me think about maintaining a running minimum.
 
-If the interviewer asks for an O(N) solution and the problem involves a running sum, checking whether a negative contribution should be discarded is usually a strong hint.
+If the problem asks for the best future gain while scanning an array, tracking the smallest value seen so far is usually a strong hint.
 
 ---
 
