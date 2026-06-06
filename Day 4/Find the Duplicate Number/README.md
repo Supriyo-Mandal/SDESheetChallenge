@@ -1,4 +1,4 @@
-# Day 2 - Kadane's Algorithm
+# Day 4 - Find the Duplicate Number
 
 > Part of my #SDESheetChallenge journey.
 
@@ -6,17 +6,17 @@
 
 ## 📌 Problem Summary
 
-Given an array of integers, the goal is to find the contiguous subarray with the maximum possible sum.
-
-Instead of checking every possible subarray, the challenge is to identify the maximum sum efficiently, even when the array contains negative numbers.
+We are given an array containing `n + 1` numbers where every value lies between `1` and `n`. Since one number appears more than once, the task is to find that duplicate while keeping the array unchanged and using very little extra space.
 
 ---
 
 ## 🤔 My First Thought
 
-My first instinct was to generate every possible subarray and calculate its sum.
+My first instinct was to sort the array and look for two equal adjacent elements.
 
-It felt like the safest way because I'd definitely cover all cases. The only issue was that the number of subarrays grows quickly, and recalculating sums again and again seemed wasteful.
+It felt like the quickest way to spot a duplicate.
+
+Then I noticed the constraints about not modifying the array, and that immediately ruled out my first idea.
 
 ---
 
@@ -24,14 +24,14 @@ It felt like the safest way because I'd definitely cover all cases. The only iss
 
 ### Idea
 
-Generate every possible subarray using a start and end index. For each subarray, calculate its sum from scratch and keep track of the maximum sum seen so far.
+Sort the array first and then scan through it. If two neighboring elements are the same, that element is the duplicate.
 
 ### Complexity
 
-| Metric           | Value |
-| ---------------- | ----- |
-| Time Complexity  | O(N³) |
-| Space Complexity | O(1)  |
+| Metric           | Value      |
+| ---------------- | ---------- |
+| Time Complexity  | O(N log N) |
+| Space Complexity | O(1)       |
 
 ### File
 
@@ -45,14 +45,16 @@ brute_force.py
 
 ### Idea
 
-Instead of recalculating the sum for every subarray, keep a running sum while expanding the ending index. This avoids the third loop and reduces repeated work.
+Use a frequency array to keep track of numbers that have already appeared.
+
+As soon as a number is seen again, return it as the duplicate.
 
 ### Complexity
 
 | Metric           | Value |
 | ---------------- | ----- |
-| Time Complexity  | O(N²) |
-| Space Complexity | O(1)  |
+| Time Complexity  | O(N)  |
+| Space Complexity | O(N)  |
 
 ### File
 
@@ -66,9 +68,7 @@ better.py
 
 ### Key Observation
 
-A negative running sum will only hurt future subarrays. If the current sum becomes negative, it's better to start fresh from the next element.
-
-This simple observation leads to Kadane's Algorithm, which finds the answer in a single pass.
+The values in the array can be treated like pointers to other indices. Since one value repeats, a cycle is formed. Finding the starting point of that cycle gives the duplicate number.
 
 ### Complexity
 
@@ -87,34 +87,34 @@ optimal.py
 
 ## 🧠 Pattern Used
 
-**Greedy + Dynamic Programming**
+* Fast & Slow Pointers (Floyd's Cycle Detection)
 
-At every index, we decide whether to continue the current subarray or start a new one. The decision is made using information from the previous step, which gives it a DP flavor, while always choosing the locally best option makes it greedy.
+The constraints are the real hint here. We can't modify the array and we need constant extra space. By treating each value as a pointer, the array behaves like a linked list with a cycle, making Floyd's algorithm a perfect fit.
 
 ---
 
 ## 💡 What I Learned
 
-* A negative running sum is usually a sign to reset and start fresh.
-* The phrase "maximum subarray" should immediately remind me of Kadane's Algorithm.
-* It's easy to forget that the answer can be negative when all elements are negative.
+* The phrase "read-only array" should immediately make me question sorting.
+* Sometimes the hardest part is changing how I visualize the problem.
+* Floyd's Cycle Detection can appear outside traditional linked list questions.
 
 ---
 
 ## 🔍 Complexity Comparison
 
-| Approach    | Time  | Space |
-| ----------- | ----- | ----- |
-| Brute Force | O(N³) | O(1)  |
-| Better      | O(N²) | O(1)  |
-| Optimal     | O(N)  | O(1)  |
+| Approach    | Time       | Space |
+| ----------- | ---------- | ----- |
+| Brute Force | O(N log N) | O(1)  |
+| Better      | O(N)       | O(N)  |
+| Optimal     | O(N)       | O(1)  |
 
 ---
 
 ## 📂 Files
 
 ```text
-Day-2/
+Day-4/
 │
 ├── README.md
 ├── brute_force.py
@@ -126,15 +126,16 @@ Day-2/
 
 ## 🎯 Interview Reminder
 
-Keywords like **maximum subarray**, **largest contiguous sum**, or **best continuous segment** should make me think about Kadane's Algorithm.
+Whenever you see constraints like "don't modify the array", "constant extra space", and "one duplicate guaranteed", pause before reaching for hashing.
 
-If the interviewer asks for an O(N) solution and the problem involves a running sum, checking whether a negative contribution should be discarded is usually a strong hint.
+If the values naturally point to valid indices, try checking whether the problem can be modeled as a cycle.
 
 ---
 
 ## 🔗 Challenge Progress
 
-Day 2 / 45 ✅
+Day 4 / 45 ✅
 
 #SDESheetChallenge
 #takeUforward
+    
