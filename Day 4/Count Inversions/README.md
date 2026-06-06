@@ -1,4 +1,4 @@
-# Day 2 - Kadane's Algorithm
+# Day 4 - Count Inversions in an Array
 
 > Part of my #SDESheetChallenge journey.
 
@@ -6,17 +6,15 @@
 
 ## 📌 Problem Summary
 
-Given an array of integers, the goal is to find the contiguous subarray with the maximum possible sum.
-
-Instead of checking every possible subarray, the challenge is to identify the maximum sum efficiently, even when the array contains negative numbers.
+In this problem, we need to count how many inversion pairs exist in an array. An inversion occurs when a larger element appears before a smaller element. The inversion count helps measure how far an array is from being sorted.
 
 ---
 
 ## 🤔 My First Thought
 
-My first instinct was to generate every possible subarray and calculate its sum.
+My first instinct was to check every possible pair and count whenever the left element was greater than the right one.
 
-It felt like the safest way because I'd definitely cover all cases. The only issue was that the number of subarrays grows quickly, and recalculating sums again and again seemed wasteful.
+It felt straightforward because the inversion definition itself is based on pairs. It worked immediately, but I knew it wouldn't survive larger inputs.
 
 ---
 
@@ -24,13 +22,15 @@ It felt like the safest way because I'd definitely cover all cases. The only iss
 
 ### Idea
 
-Generate every possible subarray using a start and end index. For each subarray, calculate its sum from scratch and keep track of the maximum sum seen so far.
+Check every pair `(i, j)` where `i < j`.
+
+If `nums[i] > nums[j]`, increase the inversion count.
 
 ### Complexity
 
 | Metric           | Value |
 | ---------------- | ----- |
-| Time Complexity  | O(N³) |
+| Time Complexity  | O(N²) |
 | Space Complexity | O(1)  |
 
 ### File
@@ -43,21 +43,8 @@ brute_force.py
 
 ## ⚡ Better Approach
 
-### Idea
-
-Instead of recalculating the sum for every subarray, keep a running sum while expanding the ending index. This avoids the third loop and reduces repeated work.
-
-### Complexity
-
-| Metric           | Value |
-| ---------------- | ----- |
-| Time Complexity  | O(N²) |
-| Space Complexity | O(1)  |
-
-### File
-
-```text
-better.py
+```md
+No meaningful intermediate optimization for this problem.
 ```
 
 ---
@@ -66,16 +53,16 @@ better.py
 
 ### Key Observation
 
-A negative running sum will only hurt future subarrays. If the current sum becomes negative, it's better to start fresh from the next element.
+While merging two sorted halves in Merge Sort, if an element from the right half is smaller than an element from the left half, then all remaining elements in the left half will also form inversions with it.
 
-This simple observation leads to Kadane's Algorithm, which finds the answer in a single pass.
+This allows counting multiple inversions at once instead of checking every pair.
 
 ### Complexity
 
-| Metric           | Value |
-| ---------------- | ----- |
-| Time Complexity  | O(N)  |
-| Space Complexity | O(1)  |
+| Metric           | Value      |
+| ---------------- | ---------- |
+| Time Complexity  | O(N log N) |
+| Space Complexity | O(N)       |
 
 ### File
 
@@ -87,38 +74,39 @@ optimal.py
 
 ## 🧠 Pattern Used
 
-**Greedy + Dynamic Programming**
+**Merge Sort**
 
-At every index, we decide whether to continue the current subarray or start a new one. The decision is made using information from the previous step, which gives it a DP flavor, while always choosing the locally best option makes it greedy.
+This problem hides the inversion counting inside the merge step of Merge Sort.
+
+Since both halves are already sorted, we can efficiently count how many elements remain on the left whenever we pick a smaller element from the right half.
 
 ---
 
 ## 💡 What I Learned
 
-* A negative running sum is usually a sign to reset and start fresh.
-* The phrase "maximum subarray" should immediately remind me of Kadane's Algorithm.
-* It's easy to forget that the answer can be negative when all elements are negative.
+* If a problem asks for counting pair relationships efficiently, Merge Sort is worth considering.
+* The real trick is not sorting the array, but using the merge step to gather information.
+* I initially focused too much on the inversion definition and ignored the constraints.
 
 ---
 
 ## 🔍 Complexity Comparison
 
-| Approach    | Time  | Space |
-| ----------- | ----- | ----- |
-| Brute Force | O(N³) | O(1)  |
-| Better      | O(N²) | O(1)  |
-| Optimal     | O(N)  | O(1)  |
+| Approach    | Time       | Space |
+| ----------- | ---------- | ----- |
+| Brute Force | O(N²)      | O(1)  |
+| Better      | —          | —     |
+| Optimal     | O(N log N) | O(N)  |
 
 ---
 
 ## 📂 Files
 
 ```text
-Day-2/
+Day-4/
 │
 ├── README.md
 ├── brute_force.py
-├── better.py
 └── optimal.py
 ```
 
@@ -126,15 +114,17 @@ Day-2/
 
 ## 🎯 Interview Reminder
 
-Keywords like **maximum subarray**, **largest contiguous sum**, or **best continuous segment** should make me think about Kadane's Algorithm.
+Keywords like **count pairs**, **inversions**, **reverse pairs**, or **pair relationships with constraints** should immediately make me think beyond nested loops.
 
-If the interviewer asks for an O(N) solution and the problem involves a running sum, checking whether a negative contribution should be discarded is usually a strong hint.
+If the problem involves counting while maintaining sorted order, there's a good chance Merge Sort can be used to optimize it.
 
 ---
 
 ## 🔗 Challenge Progress
 
-Day 2 / 45 ✅
+Day 4 / 45 ✅
 
 #SDESheetChallenge
 #takeUforward
+
+---
