@@ -1,4 +1,4 @@
-# Day 2 - Best Time to Buy and Sell Stock
+# Day 3 - Merge Overlapping Sub-intervals
 
 > Part of my #SDESheetChallenge journey.
 
@@ -6,17 +6,15 @@
 
 ## 📌 Problem Summary
 
-Given stock prices for different days, the goal is to find the maximum profit possible by buying once and selling once in the future.
-
-The challenge is making sure the buy happens before the sell while finding the best profit efficiently.
+Given a list of intervals, the goal is to merge all intervals that overlap and return only the final non-overlapping intervals. The challenge is identifying overlaps efficiently and combining them without unnecessary comparisons.
 
 ---
 
 ## 🤔 My First Thought
 
-My first instinct was to check every possible buy day and every possible sell day after it.
+My first instinct was to compare every interval with the intervals that come after it and merge whenever I found an overlap.
 
-It felt safe because I'd never miss the best transaction. But pretty quickly, it felt like I was comparing way more pairs than necessary.
+It felt straightforward because I could directly check all possibilities and wouldn't miss any merge. But it also felt like I was doing a lot of repeated checking.
 
 ---
 
@@ -24,14 +22,14 @@ It felt safe because I'd never miss the best transaction. But pretty quickly, it
 
 ### Idea
 
-Try every valid buy-sell pair. For each buy day, check all future days as possible selling days and keep track of the maximum profit found.
+Sort the intervals first. For every interval, keep checking the following intervals and keep extending the current interval as long as overlaps exist. Once a non-overlapping interval is found, start the process again.
 
 ### Complexity
 
 | Metric           | Value |
 | ---------------- | ----- |
 | Time Complexity  | O(N²) |
-| Space Complexity | O(1)  |
+| Space Complexity | O(N)  |
 
 ### File
 
@@ -51,16 +49,14 @@ No meaningful intermediate optimization for this problem.
 
 ### Key Observation
 
-Instead of checking every pair, I only need to remember the lowest stock price seen so far.
-
-For each day, I can calculate the profit if I sell today and update the maximum profit. This removes the need for nested loops completely.
+After sorting, all overlapping intervals naturally appear next to each other. Instead of checking every future interval repeatedly, we only need to compare the current interval with the last merged interval.
 
 ### Complexity
 
-| Metric           | Value |
-| ---------------- | ----- |
-| Time Complexity  | O(N)  |
-| Space Complexity | O(1)  |
+| Metric           | Value      |
+| ---------------- | ---------- |
+| Time Complexity  | O(N log N) |
+| Space Complexity | O(N)       |
 
 ### File
 
@@ -72,36 +68,34 @@ optimal.py
 
 ## 🧠 Pattern Used
 
-**Greedy**
+**Sorting + Greedy (Interval Merging)**
 
-At every step, we maintain the minimum price seen so far and use it to calculate the best possible profit for the current day.
-
-The decision is local, but it guarantees the global maximum profit, which makes this a classic Greedy problem.
+Sorting brings overlapping intervals together. Once sorted, a greedy decision works because merging the current interval with the last valid merged interval is always sufficient to maintain the correct answer.
 
 ---
 
 ## 💡 What I Learned
 
-* "Buy before sell" is more important than just finding the minimum and maximum values.
-* Tracking the minimum value seen so far can eliminate a lot of unnecessary comparisons.
-* A single pass is often enough when the answer depends on previous information only.
+* If intervals are involved, sorting is usually the first thing worth considering.
+* I almost overcomplicated overlap detection before realizing adjacent intervals after sorting are enough.
+* Remembering the "last merged interval" removes a lot of unnecessary comparisons.
 
 ---
 
 ## 🔍 Complexity Comparison
 
-| Approach    | Time  | Space |
-| ----------- | ----- | ----- |
-| Brute Force | O(N²) | O(1)  |
-| Better      | —     | —     |
-| Optimal     | O(N)  | O(1)  |
+| Approach    | Time       | Space |
+| ----------- | ---------- | ----- |
+| Brute Force | O(N²)      | O(N)  |
+| Better      | —          | —     |
+| Optimal     | O(N log N) | O(N)  |
 
 ---
 
 ## 📂 Files
 
 ```text
-Day-2/
+Day-3/
 │
 ├── README.md
 ├── brute_force.py
@@ -112,15 +106,15 @@ Day-2/
 
 ## 🎯 Interview Reminder
 
-Keywords like **maximum profit**, **buy before sell**, **single transaction**, and **best difference** should immediately make me think about maintaining a running minimum.
+Keywords like **intervals**, **merge ranges**, **overlapping segments**, and **calendar scheduling** should immediately make you think about sorting first.
 
-If the problem asks for the best future gain while scanning an array, tracking the smallest value seen so far is usually a strong hint.
+A useful interview hint: if intervals can overlap, ask yourself whether sorting by start time makes the relationships easier to process.
 
 ---
 
 ## 🔗 Challenge Progress
 
-Day 2 / 45 ✅
+Day 3 / 45 ✅
 
 #SDESheetChallenge
 #takeUforward
