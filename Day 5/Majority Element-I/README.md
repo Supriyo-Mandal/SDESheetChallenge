@@ -1,4 +1,4 @@
-# Day 2 - Kadane's Algorithm
+# Day 5 - Majority Element-I
 
 > Part of my #SDESheetChallenge journey.
 
@@ -6,17 +6,15 @@
 
 ## 📌 Problem Summary
 
-Given an array of integers, the goal is to find the contiguous subarray with the maximum possible sum.
-
-Instead of checking every possible subarray, the challenge is to identify the maximum sum efficiently, even when the array contains negative numbers.
+In this problem, we need to find the element that appears more than half the size of the array. The problem guarantees that such an element always exists, so the goal is to identify it as efficiently as possible.
 
 ---
 
 ## 🤔 My First Thought
 
-My first instinct was to generate every possible subarray and calculate its sum.
+My first instinct was to count how many times each number appears and then return the one with the highest frequency.
 
-It felt like the safest way because I'd definitely cover all cases. The only issue was that the number of subarrays grows quickly, and recalculating sums again and again seemed wasteful.
+It felt straightforward because majority means "appears the most", and counting frequencies is usually the first thing that comes to mind.
 
 ---
 
@@ -24,13 +22,15 @@ It felt like the safest way because I'd definitely cover all cases. The only iss
 
 ### Idea
 
-Generate every possible subarray using a start and end index. For each subarray, calculate its sum from scratch and keep track of the maximum sum seen so far.
+For every element, scan the entire array again and count how many times it appears.
+
+If its frequency becomes greater than `n/2`, return it as the majority element.
 
 ### Complexity
 
 | Metric           | Value |
 | ---------------- | ----- |
-| Time Complexity  | O(N³) |
+| Time Complexity  | O(N²) |
 | Space Complexity | O(1)  |
 
 ### File
@@ -45,14 +45,16 @@ brute_force.py
 
 ### Idea
 
-Instead of recalculating the sum for every subarray, keep a running sum while expanding the ending index. This avoids the third loop and reduces repeated work.
+Use a hashmap to store the frequency of each element while traversing the array.
+
+After counting frequencies, find the element whose count exceeds `n/2`.
 
 ### Complexity
 
 | Metric           | Value |
 | ---------------- | ----- |
-| Time Complexity  | O(N²) |
-| Space Complexity | O(1)  |
+| Time Complexity  | O(N)  |
+| Space Complexity | O(N)  |
 
 ### File
 
@@ -66,9 +68,9 @@ better.py
 
 ### Key Observation
 
-A negative running sum will only hurt future subarrays. If the current sum becomes negative, it's better to start fresh from the next element.
+If one element appears more than half the time, every other element combined cannot completely cancel it out.
 
-This simple observation leads to Kadane's Algorithm, which finds the answer in a single pass.
+This observation leads to the Boyer-Moore Voting Algorithm, which keeps track of a candidate and eliminates competing elements.
 
 ### Complexity
 
@@ -87,17 +89,19 @@ optimal.py
 
 ## 🧠 Pattern Used
 
-**Greedy + Dynamic Programming**
+**Boyer-Moore Voting Algorithm**
 
-At every index, we decide whether to continue the current subarray or start a new one. The decision is made using information from the previous step, which gives it a DP flavor, while always choosing the locally best option makes it greedy.
+The majority element appears more than `n/2` times, which means it survives every possible cancellation against other elements.
+
+Instead of storing frequencies, we use a running candidate and count to identify the majority element in constant space.
 
 ---
 
 ## 💡 What I Learned
 
-* A negative running sum is usually a sign to reset and start fresh.
-* The phrase "maximum subarray" should immediately remind me of Kadane's Algorithm.
-* It's easy to forget that the answer can be negative when all elements are negative.
+* The condition "appears more than n/2 times" is a huge clue.
+* I initially focused on counting frequencies instead of thinking about cancellation.
+* Boyer-Moore is one of those algorithms that's easy to forget but very useful in interviews.
 
 ---
 
@@ -105,8 +109,8 @@ At every index, we decide whether to continue the current subarray or start a ne
 
 | Approach    | Time  | Space |
 | ----------- | ----- | ----- |
-| Brute Force | O(N³) | O(1)  |
-| Better      | O(N²) | O(1)  |
+| Brute Force | O(N²) | O(1)  |
+| Better      | O(N)  | O(N)  |
 | Optimal     | O(N)  | O(1)  |
 
 ---
@@ -114,7 +118,7 @@ At every index, we decide whether to continue the current subarray or start a ne
 ## 📂 Files
 
 ```text
-Day-2/
+Day-5/
 │
 ├── README.md
 ├── brute_force.py
@@ -126,15 +130,15 @@ Day-2/
 
 ## 🎯 Interview Reminder
 
-Keywords like **maximum subarray**, **largest contiguous sum**, or **best continuous segment** should make me think about Kadane's Algorithm.
+Whenever you see phrases like **"appears more than n/2 times"**, think beyond frequency counting.
 
-If the interviewer asks for an O(N) solution and the problem involves a running sum, checking whether a negative contribution should be discarded is usually a strong hint.
+If the problem guarantees the existence of a majority element, Boyer-Moore Voting Algorithm should immediately come to mind.
 
 ---
 
 ## 🔗 Challenge Progress
 
-Day 2 / 45 ✅
+Day 5 / 45 ✅
 
 #SDESheetChallenge
 #takeUforward
