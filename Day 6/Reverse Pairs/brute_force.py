@@ -1,0 +1,19 @@
+from typing import List
+
+def countPairs(a: [int], n: int) -> int:
+    # Count the number of pairs:
+    cnt = 0
+    for i in range(n):
+        for j in range(i + 1, n):
+            if a[i] > 2 * a[j]:
+                cnt += 1
+    return cnt
+
+def team(skill: [int], n: int) -> int:
+    return countPairs(skill, n)
+
+if __name__ == "__main__":
+    a = [4, 1, 2, 3, 1]
+    n = 5
+    cnt = team(a, n)
+    print("The number of inversions are:", cnt)
