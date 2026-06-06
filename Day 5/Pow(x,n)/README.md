@@ -1,4 +1,4 @@
-# Day 2 - Kadane's Algorithm
+# Day 5 - Pow(x, n)
 
 > Part of my #SDESheetChallenge journey.
 
@@ -6,17 +6,13 @@
 
 ## 📌 Problem Summary
 
-Given an array of integers, the goal is to find the contiguous subarray with the maximum possible sum.
-
-Instead of checking every possible subarray, the challenge is to identify the maximum sum efficiently, even when the array contains negative numbers.
+The goal is to calculate x raised to the power n. The tricky part is handling very large exponents and negative powers efficiently instead of multiplying the number repeatedly.
 
 ---
 
 ## 🤔 My First Thought
 
-My first instinct was to generate every possible subarray and calculate its sum.
-
-It felt like the safest way because I'd definitely cover all cases. The only issue was that the number of subarrays grows quickly, and recalculating sums again and again seemed wasteful.
+My first instinct was to multiply x by itself n times and keep updating the answer. It felt straightforward because that's how we normally calculate powers manually. But once I noticed the exponent could be huge, I knew that approach wouldn't survive the constraints.
 
 ---
 
@@ -24,13 +20,13 @@ It felt like the safest way because I'd definitely cover all cases. The only iss
 
 ### Idea
 
-Generate every possible subarray using a start and end index. For each subarray, calculate its sum from scratch and keep track of the maximum sum seen so far.
+Start with an answer of 1 and multiply it by x exactly n times. For negative powers, convert the exponent to positive and take the reciprocal at the end.
 
 ### Complexity
 
 | Metric           | Value |
 | ---------------- | ----- |
-| Time Complexity  | O(N³) |
+| Time Complexity  | O(N)  |
 | Space Complexity | O(1)  |
 
 ### File
@@ -43,22 +39,7 @@ brute_force.py
 
 ## ⚡ Better Approach
 
-### Idea
-
-Instead of recalculating the sum for every subarray, keep a running sum while expanding the ending index. This avoids the third loop and reduces repeated work.
-
-### Complexity
-
-| Metric           | Value |
-| ---------------- | ----- |
-| Time Complexity  | O(N²) |
-| Space Complexity | O(1)  |
-
-### File
-
-```text
-better.py
-```
+No meaningful intermediate optimization for this problem.
 
 ---
 
@@ -66,16 +47,14 @@ better.py
 
 ### Key Observation
 
-A negative running sum will only hurt future subarrays. If the current sum becomes negative, it's better to start fresh from the next element.
-
-This simple observation leads to Kadane's Algorithm, which finds the answer in a single pass.
+Instead of multiplying x repeatedly, we can reduce the exponent by half whenever it's even. By squaring the base and halving the exponent, we eliminate a large amount of work in each step.
 
 ### Complexity
 
-| Metric           | Value |
-| ---------------- | ----- |
-| Time Complexity  | O(N)  |
-| Space Complexity | O(1)  |
+| Metric           | Value    |
+| ---------------- | -------- |
+| Time Complexity  | O(log N) |
+| Space Complexity | O(log N) |
 
 ### File
 
@@ -87,38 +66,37 @@ optimal.py
 
 ## 🧠 Pattern Used
 
-**Greedy + Dynamic Programming**
+* Binary Exponentiation
 
-At every index, we decide whether to continue the current subarray or start a new one. The decision is made using information from the previous step, which gives it a DP flavor, while always choosing the locally best option makes it greedy.
+This problem is a classic application of Binary Exponentiation. The idea is to use the binary representation of the exponent and repeatedly square the base, reducing the number of operations drastically compared to naive multiplication.
 
 ---
 
 ## 💡 What I Learned
 
-* A negative running sum is usually a sign to reset and start fresh.
-* The phrase "maximum subarray" should immediately remind me of Kadane's Algorithm.
-* It's easy to forget that the answer can be negative when all elements are negative.
+* Seeing a very large exponent is usually a hint that repeated multiplication won't work.
+* I almost forgot to handle negative powers separately.
+* Squaring the base while halving the exponent is a pattern worth remembering for interviews.
 
 ---
 
 ## 🔍 Complexity Comparison
 
-| Approach    | Time  | Space |
-| ----------- | ----- | ----- |
-| Brute Force | O(N³) | O(1)  |
-| Better      | O(N²) | O(1)  |
-| Optimal     | O(N)  | O(1)  |
+| Approach    | Time     | Space    |
+| ----------- | -------- | -------- |
+| Brute Force | O(N)     | O(1)     |
+| Better      | —        | —        |
+| Optimal     | O(log N) | O(log N) |
 
 ---
 
 ## 📂 Files
 
 ```text
-Day-2/
+Day-5/
 │
 ├── README.md
 ├── brute_force.py
-├── better.py
 └── optimal.py
 ```
 
@@ -126,15 +104,15 @@ Day-2/
 
 ## 🎯 Interview Reminder
 
-Keywords like **maximum subarray**, **largest contiguous sum**, or **best continuous segment** should make me think about Kadane's Algorithm.
+Whenever a problem involves powers, exponents, or repeated multiplication with large values of n, think about Binary Exponentiation.
 
-If the interviewer asks for an O(N) solution and the problem involves a running sum, checking whether a negative contribution should be discarded is usually a strong hint.
+A good interview clue is when the brute-force solution is O(N) and the constraints clearly demand something much faster.
 
 ---
 
 ## 🔗 Challenge Progress
 
-Day 2 / 45 ✅
+Day 5 / 45 ✅
 
 #SDESheetChallenge
 #takeUforward
