@@ -1,4 +1,4 @@
-# Day 5 - Majority Element-I
+# Day 6 - Majority Element-II
 
 > Part of my #SDESheetChallenge journey.
 
@@ -6,15 +6,15 @@
 
 ## 📌 Problem Summary
 
-In this problem, we need to find the element that appears more than half the size of the array. The problem guarantees that such an element always exists, so the goal is to identify it as efficiently as possible.
+In this problem, we need to find all elements that appear more than ⌊n/3⌋ times in an array. Unlike the majority element (> n/2), there can be at most two valid answers here. The goal is to return all such elements efficiently.
 
 ---
 
 ## 🤔 My First Thought
 
-My first instinct was to count how many times each number appears and then return the one with the highest frequency.
+My first instinct was to count the frequency of every number and then check which ones cross the n/3 mark.
 
-It felt straightforward because majority means "appears the most", and counting frequencies is usually the first thing that comes to mind.
+It felt straightforward because frequency-based problems usually become easy once counts are available. I wasn't thinking about the space constraint at first.
 
 ---
 
@@ -22,9 +22,9 @@ It felt straightforward because majority means "appears the most", and counting 
 
 ### Idea
 
-For every element, scan the entire array again and count how many times it appears.
+Pick each element and count how many times it appears by traversing the entire array again.
 
-If its frequency becomes greater than `n/2`, return it as the majority element.
+If its frequency is greater than n/3, add it to the answer list. Since there can be at most two valid elements, stop once two are found.
 
 ### Complexity
 
@@ -45,9 +45,9 @@ brute_force.py
 
 ### Idea
 
-Use a hashmap to store the frequency of each element while traversing the array.
+Use a hashmap to store the frequency of every element while traversing the array.
 
-After counting frequencies, find the element whose count exceeds `n/2`.
+After building the frequency map, check which elements occur more than n/3 times and add them to the result.
 
 ### Complexity
 
@@ -68,9 +68,9 @@ better.py
 
 ### Key Observation
 
-If one element appears more than half the time, every other element combined cannot completely cancel it out.
+If an element appears more than n/3 times, there can be at most two such elements in the entire array.
 
-This observation leads to the Boyer-Moore Voting Algorithm, which keeps track of a candidate and eliminates competing elements.
+That observation allows us to track only two potential candidates and their counts instead of storing frequencies for every number. A final validation pass confirms the answer.
 
 ### Complexity
 
@@ -91,17 +91,17 @@ optimal.py
 
 **Boyer-Moore Voting Algorithm**
 
-The majority element appears more than `n/2` times, which means it survives every possible cancellation against other elements.
+This problem is an extension of the classic Majority Element problem. Instead of tracking one candidate, we track two possible candidates because there can be at most two elements occurring more than n/3 times.
 
-Instead of storing frequencies, we use a running candidate and count to identify the majority element in constant space.
+The pattern works by canceling out different elements and keeping only the strongest candidates for verification later.
 
 ---
 
 ## 💡 What I Learned
 
-* The condition "appears more than n/2 times" is a huge clue.
-* I initially focused on counting frequencies instead of thinking about cancellation.
-* Boyer-Moore is one of those algorithms that's easy to forget but very useful in interviews.
+* The "more than n/3 times" condition immediately limits the answer count to at most two elements.
+* I almost forgot the final verification step after finding the candidates.
+* Boyer-Moore is not just for n/2 majority problems; it can be extended to other frequency thresholds.
 
 ---
 
@@ -118,7 +118,7 @@ Instead of storing frequencies, we use a running candidate and count to identify
 ## 📂 Files
 
 ```text
-Day-5/
+Day-6/
 │
 ├── README.md
 ├── brute_force.py
@@ -130,15 +130,17 @@ Day-5/
 
 ## 🎯 Interview Reminder
 
-Whenever you see phrases like **"appears more than n/2 times"**, think beyond frequency counting.
+Whenever a problem says an element appears more than a fraction of the array size (n/2, n/3, etc.), think about candidate elimination techniques.
 
-If the problem guarantees the existence of a majority element, Boyer-Moore Voting Algorithm should immediately come to mind.
+A good interview clue is: "Can we solve this without storing frequencies of every element?" That usually points toward Boyer-Moore Voting.
 
 ---
 
 ## 🔗 Challenge Progress
 
-Day 5 / 45 ✅
+Day 6 / 45 ✅
 
 #SDESheetChallenge
 #takeUforward
+
+---

@@ -1,4 +1,4 @@
-# Day 5 - Majority Element-I
+# Day 6 - Grid Unique Paths
 
 > Part of my #SDESheetChallenge journey.
 
@@ -6,15 +6,17 @@
 
 ## 📌 Problem Summary
 
-In this problem, we need to find the element that appears more than half the size of the array. The problem guarantees that such an element always exists, so the goal is to identify it as efficiently as possible.
+In this problem, we need to find how many different ways exist to move from the top-left corner of a grid to the bottom-right corner. The only allowed moves are right and down, so the challenge is counting all valid paths without missing any combinations.
 
 ---
 
 ## 🤔 My First Thought
 
-My first instinct was to count how many times each number appears and then return the one with the highest frequency.
+My first instinct was to try every possible path using recursion.
 
-It felt straightforward because majority means "appears the most", and counting frequencies is usually the first thing that comes to mind.
+It felt natural because from any cell I only had two choices: move right or move down.
+
+But after drawing a few grids, I noticed I was solving the same positions again and again.
 
 ---
 
@@ -22,16 +24,16 @@ It felt straightforward because majority means "appears the most", and counting 
 
 ### Idea
 
-For every element, scan the entire array again and count how many times it appears.
+Use recursion to explore every possible path from the current cell.
 
-If its frequency becomes greater than `n/2`, return it as the majority element.
+At each position, try moving right and down until the destination is reached. Count all valid paths and return the total.
 
 ### Complexity
 
-| Metric           | Value |
-| ---------------- | ----- |
-| Time Complexity  | O(N²) |
-| Space Complexity | O(1)  |
+| Metric           | Value      |
+| ---------------- | ---------- |
+| Time Complexity  | O(2^(m+n)) |
+| Space Complexity | O(m+n)     |
 
 ### File
 
@@ -45,16 +47,16 @@ brute_force.py
 
 ### Idea
 
-Use a hashmap to store the frequency of each element while traversing the array.
+Use memoization to store answers for already solved cells.
 
-After counting frequencies, find the element whose count exceeds `n/2`.
+If a cell's path count has been calculated before, reuse it instead of solving the same subproblem again.
 
 ### Complexity
 
-| Metric           | Value |
-| ---------------- | ----- |
-| Time Complexity  | O(N)  |
-| Space Complexity | O(N)  |
+| Metric           | Value    |
+| ---------------- | -------- |
+| Time Complexity  | O(m × n) |
+| Space Complexity | O(m × n) |
 
 ### File
 
@@ -68,16 +70,16 @@ better.py
 
 ### Key Observation
 
-If one element appears more than half the time, every other element combined cannot completely cancel it out.
+To calculate paths for a cell, we only need values from the current row and the previous row. There is no need to store the entire DP table.
 
-This observation leads to the Boyer-Moore Voting Algorithm, which keeps track of a candidate and eliminates competing elements.
+Using two 1D arrays (or even one), we can reduce the space significantly while keeping the same time complexity.
 
 ### Complexity
 
-| Metric           | Value |
-| ---------------- | ----- |
-| Time Complexity  | O(N)  |
-| Space Complexity | O(1)  |
+| Metric           | Value    |
+| ---------------- | -------- |
+| Time Complexity  | O(m × n) |
+| Space Complexity | O(n)     |
 
 ### File
 
@@ -89,36 +91,36 @@ optimal.py
 
 ## 🧠 Pattern Used
 
-**Boyer-Moore Voting Algorithm**
+**Dynamic Programming (DP on Grids)**
 
-The majority element appears more than `n/2` times, which means it survives every possible cancellation against other elements.
+The problem contains overlapping subproblems because the number of paths to a cell gets calculated multiple times through different routes.
 
-Instead of storing frequencies, we use a running candidate and count to identify the majority element in constant space.
+DP helps store those results and reuse them, turning an exponential solution into a polynomial one.
 
 ---
 
 ## 💡 What I Learned
 
-* The condition "appears more than n/2 times" is a huge clue.
-* I initially focused on counting frequencies instead of thinking about cancellation.
-* Boyer-Moore is one of those algorithms that's easy to forget but very useful in interviews.
+* If recursion revisits the same grid cells repeatedly, DP is probably hiding somewhere.
+* In grid problems, always think about what information is needed from neighboring cells.
+* Space optimization usually comes after understanding the DP transition clearly.
 
 ---
 
 ## 🔍 Complexity Comparison
 
-| Approach    | Time  | Space |
-| ----------- | ----- | ----- |
-| Brute Force | O(N²) | O(1)  |
-| Better      | O(N)  | O(N)  |
-| Optimal     | O(N)  | O(1)  |
+| Approach    | Time       | Space    |
+| ----------- | ---------- | -------- |
+| Brute Force | O(2^(m+n)) | O(m+n)   |
+| Better      | O(m × n)   | O(m × n) |
+| Optimal     | O(m × n)   | O(n)     |
 
 ---
 
 ## 📂 Files
 
 ```text
-Day-5/
+Day-6/
 │
 ├── README.md
 ├── brute_force.py
@@ -130,15 +132,15 @@ Day-5/
 
 ## 🎯 Interview Reminder
 
-Whenever you see phrases like **"appears more than n/2 times"**, think beyond frequency counting.
+Whenever you see a grid and the question asks for the number of ways, paths, or minimum/maximum values, think about Dynamic Programming.
 
-If the problem guarantees the existence of a majority element, Boyer-Moore Voting Algorithm should immediately come to mind.
+A useful hint is to ask: "Can the answer for this cell be built using answers from neighboring cells?"
 
 ---
 
 ## 🔗 Challenge Progress
 
-Day 5 / 45 ✅
+Day 6 / 45 ✅
 
 #SDESheetChallenge
 #takeUforward
