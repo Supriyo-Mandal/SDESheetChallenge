@@ -1,4 +1,4 @@
-# Day 2 - Kadane's Algorithm
+# Day 4 - Find the Repeating and Missing Number
 
 > Part of my #SDESheetChallenge journey.
 
@@ -6,17 +6,17 @@
 
 ## 📌 Problem Summary
 
-Given an array of integers, the goal is to find the contiguous subarray with the maximum possible sum.
-
-Instead of checking every possible subarray, the challenge is to identify the maximum sum efficiently, even when the array contains negative numbers.
+In this problem, one number from the range `1 to n` is missing, and another number appears twice. The task is to find both numbers without modifying the original array. The challenge is to do it efficiently while keeping space usage low.
 
 ---
 
 ## 🤔 My First Thought
 
-My first instinct was to generate every possible subarray and calculate its sum.
+My first instinct was to count how many times every number appears.
 
-It felt like the safest way because I'd definitely cover all cases. The only issue was that the number of subarrays grows quickly, and recalculating sums again and again seemed wasteful.
+It felt straightforward because once a number appears twice and another doesn't appear at all, the answer is right there.
+
+Not the most efficient idea, but it was the easiest place to start.
 
 ---
 
@@ -24,13 +24,15 @@ It felt like the safest way because I'd definitely cover all cases. The only iss
 
 ### Idea
 
-Generate every possible subarray using a start and end index. For each subarray, calculate its sum from scratch and keep track of the maximum sum seen so far.
+For every number from `1` to `n`, scan the entire array and count its occurrences.
+
+If a number appears twice, it's the repeating number. If it never appears, it's the missing number.
 
 ### Complexity
 
 | Metric           | Value |
 | ---------------- | ----- |
-| Time Complexity  | O(N³) |
+| Time Complexity  | O(N²) |
 | Space Complexity | O(1)  |
 
 ### File
@@ -45,14 +47,16 @@ brute_force.py
 
 ### Idea
 
-Instead of recalculating the sum for every subarray, keep a running sum while expanding the ending index. This avoids the third loop and reduces repeated work.
+Use a frequency array to track how many times each number appears.
+
+After counting frequencies, the number with frequency `2` is repeating and the number with frequency `0` is missing.
 
 ### Complexity
 
 | Metric           | Value |
 | ---------------- | ----- |
-| Time Complexity  | O(N²) |
-| Space Complexity | O(1)  |
+| Time Complexity  | O(N)  |
+| Space Complexity | O(N)  |
 
 ### File
 
@@ -66,9 +70,9 @@ better.py
 
 ### Key Observation
 
-A negative running sum will only hurt future subarrays. If the current sum becomes negative, it's better to start fresh from the next element.
+The array contains numbers from `1` to `n`, which means the expected sum and expected sum of squares are already known.
 
-This simple observation leads to Kadane's Algorithm, which finds the answer in a single pass.
+Comparing expected values with actual values gives two equations that can directly reveal the repeating and missing numbers without extra space.
 
 ### Complexity
 
@@ -87,17 +91,19 @@ optimal.py
 
 ## 🧠 Pattern Used
 
-**Greedy + Dynamic Programming**
+**Math / Equation-Based Analysis**
 
-At every index, we decide whether to continue the current subarray or start a new one. The decision is made using information from the previous step, which gives it a DP flavor, while always choosing the locally best option makes it greedy.
+Instead of storing frequencies, we use mathematical properties of the numbers from `1` to `n`.
+
+The difference in sums and sum of squares helps form equations that directly identify the repeating and missing values while using constant extra space.
 
 ---
 
 ## 💡 What I Learned
 
-* A negative running sum is usually a sign to reset and start fresh.
-* The phrase "maximum subarray" should immediately remind me of Kadane's Algorithm.
-* It's easy to forget that the answer can be negative when all elements are negative.
+* Seeing numbers restricted to `1...n` is often a clue that math tricks might work.
+* It's easy to forget about integer overflow when using sum-of-squares formulas in some languages.
+* Not every O(N) solution is optimal if it still uses extra memory.
 
 ---
 
@@ -105,8 +111,8 @@ At every index, we decide whether to continue the current subarray or start a ne
 
 | Approach    | Time  | Space |
 | ----------- | ----- | ----- |
-| Brute Force | O(N³) | O(1)  |
-| Better      | O(N²) | O(1)  |
+| Brute Force | O(N²) | O(1)  |
+| Better      | O(N)  | O(N)  |
 | Optimal     | O(N)  | O(1)  |
 
 ---
@@ -114,7 +120,7 @@ At every index, we decide whether to continue the current subarray or start a ne
 ## 📂 Files
 
 ```text
-Day-2/
+Day-4/
 │
 ├── README.md
 ├── brute_force.py
@@ -126,15 +132,17 @@ Day-2/
 
 ## 🎯 Interview Reminder
 
-Keywords like **maximum subarray**, **largest contiguous sum**, or **best continuous segment** should make me think about Kadane's Algorithm.
+Whenever a problem says numbers are from `1 to n` and exactly one value is missing or repeated, pause before using hashing.
 
-If the interviewer asks for an O(N) solution and the problem involves a running sum, checking whether a negative contribution should be discarded is usually a strong hint.
+Check if sum, sum of squares, XOR, or cycle-detection properties can help reduce space complexity.
 
 ---
 
 ## 🔗 Challenge Progress
 
-Day 2 / 45 ✅
+Day 4 / 45 ✅
 
 #SDESheetChallenge
 #takeUforward
+
+---
