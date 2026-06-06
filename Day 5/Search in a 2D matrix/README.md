@@ -1,4 +1,4 @@
-# Day 2 - Kadane's Algorithm
+# Day 5 - Search in a Sorted 2D Matrix
 
 > Part of my #SDESheetChallenge journey.
 
@@ -6,17 +6,15 @@
 
 ## 📌 Problem Summary
 
-Given an array of integers, the goal is to find the contiguous subarray with the maximum possible sum.
-
-Instead of checking every possible subarray, the challenge is to identify the maximum sum efficiently, even when the array contains negative numbers.
+We are given a matrix where every row is sorted, and each row starts with a value greater than the last value of the previous row. The task is to determine whether a target value exists in the matrix.
 
 ---
 
 ## 🤔 My First Thought
 
-My first instinct was to generate every possible subarray and calculate its sum.
+My first instinct was to just scan every element one by one.
 
-It felt like the safest way because I'd definitely cover all cases. The only issue was that the number of subarrays grows quickly, and recalculating sums again and again seemed wasteful.
+It felt straightforward because the matrix size isn't huge, and I'd definitely find the target if it existed. But after looking at the sorting conditions more carefully, it felt wasteful to ignore all that structure.
 
 ---
 
@@ -24,14 +22,16 @@ It felt like the safest way because I'd definitely cover all cases. The only iss
 
 ### Idea
 
-Generate every possible subarray using a start and end index. For each subarray, calculate its sum from scratch and keep track of the maximum sum seen so far.
+Traverse every row and every column in the matrix.
+
+Compare each element with the target and return `True` as soon as a match is found.
 
 ### Complexity
 
-| Metric           | Value |
-| ---------------- | ----- |
-| Time Complexity  | O(N³) |
-| Space Complexity | O(1)  |
+| Metric           | Value    |
+| ---------------- | -------- |
+| Time Complexity  | O(N × M) |
+| Space Complexity | O(1)     |
 
 ### File
 
@@ -45,14 +45,16 @@ brute_force.py
 
 ### Idea
 
-Instead of recalculating the sum for every subarray, keep a running sum while expanding the ending index. This avoids the third loop and reduces repeated work.
+Instead of searching every element, first identify the row that could contain the target.
+
+If the target lies between the first and last element of a row, perform binary search only on that row.
 
 ### Complexity
 
-| Metric           | Value |
-| ---------------- | ----- |
-| Time Complexity  | O(N²) |
-| Space Complexity | O(1)  |
+| Metric           | Value        |
+| ---------------- | ------------ |
+| Time Complexity  | O(N × log M) |
+| Space Complexity | O(1)         |
 
 ### File
 
@@ -66,16 +68,16 @@ better.py
 
 ### Key Observation
 
-A negative running sum will only hurt future subarrays. If the current sum becomes negative, it's better to start fresh from the next element.
+The entire matrix behaves like one sorted 1D array.
 
-This simple observation leads to Kadane's Algorithm, which finds the answer in a single pass.
+Without actually flattening the matrix, we can perform binary search on indices and convert each virtual index back into row and column positions.
 
 ### Complexity
 
-| Metric           | Value |
-| ---------------- | ----- |
-| Time Complexity  | O(N)  |
-| Space Complexity | O(1)  |
+| Metric           | Value         |
+| ---------------- | ------------- |
+| Time Complexity  | O(log(N × M)) |
+| Space Complexity | O(1)          |
 
 ### File
 
@@ -87,34 +89,36 @@ optimal.py
 
 ## 🧠 Pattern Used
 
-**Greedy + Dynamic Programming**
+### Binary Search
 
-At every index, we decide whether to continue the current subarray or start a new one. The decision is made using information from the previous step, which gives it a DP flavor, while always choosing the locally best option makes it greedy.
+The biggest clue was that the matrix is globally sorted, not just row-wise sorted.
+
+Whenever a problem guarantees sorted order and asks for efficient searching, binary search should immediately come to mind. Here we simply extend the idea to a virtual 1D array.
 
 ---
 
 ## 💡 What I Learned
 
-* A negative running sum is usually a sign to reset and start fresh.
-* The phrase "maximum subarray" should immediately remind me of Kadane's Algorithm.
-* It's easy to forget that the answer can be negative when all elements are negative.
+* The condition between rows is more important than the row sorting itself.
+* I almost treated this like a normal matrix search problem and missed the global ordering clue.
+* Flattening conceptually is useful even when we don't physically create a new array.
 
 ---
 
 ## 🔍 Complexity Comparison
 
-| Approach    | Time  | Space |
-| ----------- | ----- | ----- |
-| Brute Force | O(N³) | O(1)  |
-| Better      | O(N²) | O(1)  |
-| Optimal     | O(N)  | O(1)  |
+| Approach    | Time          | Space |
+| ----------- | ------------- | ----- |
+| Brute Force | O(N × M)      | O(1)  |
+| Better      | O(N × log M)  | O(1)  |
+| Optimal     | O(log(N × M)) | O(1)  |
 
 ---
 
 ## 📂 Files
 
 ```text
-Day-2/
+Day-5/
 │
 ├── README.md
 ├── brute_force.py
@@ -126,15 +130,17 @@ Day-2/
 
 ## 🎯 Interview Reminder
 
-Keywords like **maximum subarray**, **largest contiguous sum**, or **best continuous segment** should make me think about Kadane's Algorithm.
+Whenever you see phrases like "rows sorted", "global ordering", or "search in a sorted matrix", pause and check if the matrix can be treated as a sorted 1D array.
 
-If the interviewer asks for an O(N) solution and the problem involves a running sum, checking whether a negative contribution should be discarded is usually a strong hint.
+If the matrix behaves like one continuous sorted sequence, a virtual binary search is usually the fastest solution.
 
 ---
 
 ## 🔗 Challenge Progress
 
-Day 2 / 45 ✅
+Day 5 / 45 ✅
 
 #SDESheetChallenge
 #takeUforward
+
+---
