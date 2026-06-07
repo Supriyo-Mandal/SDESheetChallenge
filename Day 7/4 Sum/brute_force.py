@@ -1,42 +1,33 @@
-from typing import List
-
 class Solution:
-    # Function to find maximum sum of subarrays
-    def maxSubArray(self, nums: list[int]) -> int:
-        
-        """ Initialize maximum sum with
-        the smallest possible integer"""
-        maxi = float('-inf')
+    # Function to find quadruplets with sum = target
+    def fourSum(self, arr, target):
+        # Get size of array
+        n = len(arr)
+        # Use set to store unique quadruplets
+        st = set()
 
-        # Iterate over each starting index of subarrays
-        for i in range(len(nums)):
-            
-            """ Iterate over each ending index
-            of subarrays starting from i"""
-            for j in range(i, len(nums)):
-                
-                """ Variable to store the sum
-                of the current subarray"""
-                sum = 0
+        # First loop - pick first element
+        for i in range(n):
+            # Second loop - pick second element
+            for j in range(i + 1, n):
+                # Third loop - pick third element
+                for k in range(j + 1, n):
+                    # Fourth loop - pick fourth element
+                    for l in range(k + 1, n):
+                        # If sum equals target
+                        if arr[i] + arr[j] + arr[k] + arr[l] == target:
+                            # Store sorted quadruplet as tuple
+                            temp = tuple(sorted([arr[i], arr[j], arr[k], arr[l]]))
+                            st.add(temp)
 
-                # Calculate the sum of subarray nums[i...j]
-                for k in range(i, j + 1):
-                    sum += nums[k]
+        # Convert set to list of lists
+        return [list(quad) for quad in st]
 
-                """ Update maxi with the maximum of itscurrent
-                value and the sum of the current subarray"""
-                maxi = max(maxi, sum)
 
-        # Return the maximum subarray sum found
-        return maxi
+# Driver code
+arr = [1, 0, -1, 0, -2, 2]
+target = 0
 
-# Test
-arr = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
-
-#create an isinstance of Solution class
-sol = Solution()
-
-maxSum = sol.maxSubArray(arr)
-
-#Print the max sum of subarrays
-print("The maximum subarray sum is:", maxSum)
+obj = Solution()
+ans = obj.fourSum(arr, target)
+print(ans)

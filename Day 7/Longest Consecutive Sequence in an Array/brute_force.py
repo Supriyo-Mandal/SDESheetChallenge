@@ -1,33 +1,46 @@
+
 class Solution:
-    # Function to find quadruplets with sum = target
-    def fourSum(self, arr, target):
-        # Get size of array
-        n = len(arr)
-        # Use set to store unique quadruplets
-        st = set()
-
-        # First loop - pick first element
+    # Helper function to perform linear search
+    def linearSearch(self, nums, num):
+        n = len(nums)
+        # Traverse through the array
         for i in range(n):
-            # Second loop - pick second element
-            for j in range(i + 1, n):
-                # Third loop - pick third element
-                for k in range(j + 1, n):
-                    # Fourth loop - pick fourth element
-                    for l in range(k + 1, n):
-                        # If sum equals target
-                        if arr[i] + arr[j] + arr[k] + arr[l] == target:
-                            # Store sorted quadruplet as tuple
-                            temp = tuple(sorted([arr[i], arr[j], arr[k], arr[l]]))
-                            st.add(temp)
+            if nums[i] == num:
+                return True
+        return False
 
-        # Convert set to list of lists
-        return [list(quad) for quad in st]
+    def longestConsecutive(self, nums):
+        # If the array is empty
+        if len(nums) == 0:
+            return 0
+        n = len(nums)
+        # Initialize the longest sequence length
+        longest = 1
 
+        # Iterate through each element in the array
+        for i in range(n):
+            # Current element
+            x = nums[i]
+            # Count of the current sequence
+            cnt = 1
 
-# Driver code
-arr = [1, 0, -1, 0, -2, 2]
-target = 0
+            # Search for consecutive numbers
+            while self.linearSearch(nums, x + 1):
+                # Move to the next number in the sequence
+                x += 1
+                # Increment the count of the sequence
+                cnt += 1
 
-obj = Solution()
-ans = obj.fourSum(arr, target)
-print(ans)
+            # Update the longest sequence length found so far
+            longest = max(longest, cnt)
+        return longest
+
+if __name__ == "__main__":
+    a = [100, 4, 200, 1, 3, 2]
+
+    # Create an instance of the Solution class
+    solution = Solution()
+
+    # Function call for longest consecutive sequence
+    ans = solution.longestConsecutive(a)
+    print("The longest consecutive sequence is", ans)

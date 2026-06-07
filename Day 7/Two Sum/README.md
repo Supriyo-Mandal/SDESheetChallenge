@@ -1,4 +1,4 @@
-# Day 6 - Grid Unique Paths
+# Day 7 - Two Sum
 
 > Part of my #SDESheetChallenge journey.
 
@@ -6,17 +6,13 @@
 
 ## 📌 Problem Summary
 
-In this problem, we need to find how many different ways exist to move from the top-left corner of a grid to the bottom-right corner. The only allowed moves are right and down, so the challenge is counting all valid paths without missing any combinations.
+Given an array and a target value, the goal is to find whether any two numbers add up to the target. Depending on the variant, we either return YES/NO or the indices of the two numbers.
 
 ---
 
 ## 🤔 My First Thought
 
-My first instinct was to try every possible path using recursion.
-
-It felt natural because from any cell I only had two choices: move right or move down.
-
-But after drawing a few grids, I noticed I was solving the same positions again and again.
+My first instinct was to check every possible pair. It felt natural because if a valid pair exists, comparing all combinations would definitely find it. Not efficient, but a good starting point to understand the problem.
 
 ---
 
@@ -24,16 +20,14 @@ But after drawing a few grids, I noticed I was solving the same positions again 
 
 ### Idea
 
-Use recursion to explore every possible path from the current cell.
-
-At each position, try moving right and down until the destination is reached. Count all valid paths and return the total.
+Pick one element and compare it with every element after it. If any pair adds up to the target, return the answer immediately.
 
 ### Complexity
 
-| Metric           | Value      |
-| ---------------- | ---------- |
-| Time Complexity  | O(2^(m+n)) |
-| Space Complexity | O(m+n)     |
+| Metric           | Value |
+| ---------------- | ----- |
+| Time Complexity  | O(N²) |
+| Space Complexity | O(1)  |
 
 ### File
 
@@ -47,16 +41,14 @@ brute_force.py
 
 ### Idea
 
-Use memoization to store answers for already solved cells.
-
-If a cell's path count has been calculated before, reuse it instead of solving the same subproblem again.
+Use a hashmap to store numbers already seen. For every element, check whether its required complement (target - current number) already exists in the hashmap.
 
 ### Complexity
 
-| Metric           | Value    |
-| ---------------- | -------- |
-| Time Complexity  | O(m × n) |
-| Space Complexity | O(m × n) |
+| Metric           | Value |
+| ---------------- | ----- |
+| Time Complexity  | O(N)  |
+| Space Complexity | O(N)  |
 
 ### File
 
@@ -70,16 +62,14 @@ better.py
 
 ### Key Observation
 
-To calculate paths for a cell, we only need values from the current row and the previous row. There is no need to store the entire DP table.
-
-Using two 1D arrays (or even one), we can reduce the space significantly while keeping the same time complexity.
+Instead of checking every pair, keep track of previously seen values. The moment the required complement appears, we have our answer. This avoids unnecessary comparisons completely.
 
 ### Complexity
 
-| Metric           | Value    |
-| ---------------- | -------- |
-| Time Complexity  | O(m × n) |
-| Space Complexity | O(n)     |
+| Metric           | Value |
+| ---------------- | ----- |
+| Time Complexity  | O(N)  |
+| Space Complexity | O(N)  |
 
 ### File
 
@@ -91,36 +81,34 @@ optimal.py
 
 ## 🧠 Pattern Used
 
-**Dynamic Programming (DP on Grids)**
+### Hashing
 
-The problem contains overlapping subproblems because the number of paths to a cell gets calculated multiple times through different routes.
-
-DP helps store those results and reuse them, turning an exponential solution into a polynomial one.
+This problem is a classic example of using hashing for fast lookups. Instead of searching the array repeatedly, we store elements in a hashmap and check for complements in constant time.
 
 ---
 
 ## 💡 What I Learned
 
-* If recursion revisits the same grid cells repeatedly, DP is probably hiding somewhere.
-* In grid problems, always think about what information is needed from neighboring cells.
-* Space optimization usually comes after understanding the DP transition clearly.
+* Whenever I hear "find a pair with a given sum", hashing should be one of my first thoughts.
+* It's easy to forget that the complement must be checked before inserting the current element.
+* Sometimes the simplest optimization comes from avoiding repeated searches.
 
 ---
 
 ## 🔍 Complexity Comparison
 
-| Approach    | Time       | Space    |
-| ----------- | ---------- | -------- |
-| Brute Force | O(2^(m+n)) | O(m+n)   |
-| Better      | O(m × n)   | O(m × n) |
-| Optimal     | O(m × n)   | O(n)     |
+| Approach    | Time  | Space |
+| ----------- | ----- | ----- |
+| Brute Force | O(N²) | O(1)  |
+| Better      | O(N)  | O(N)  |
+| Optimal     | O(N)  | O(N)  |
 
 ---
 
 ## 📂 Files
 
 ```text
-Day-6/
+Day-7/
 │
 ├── README.md
 ├── brute_force.py
@@ -132,15 +120,15 @@ Day-6/
 
 ## 🎯 Interview Reminder
 
-Whenever you see a grid and the question asks for the number of ways, paths, or minimum/maximum values, think about Dynamic Programming.
+Keywords like "pair sum", "target sum", "find two numbers", or "return indices" should immediately make me think about hashing.
 
-A useful hint is to ask: "Can the answer for this cell be built using answers from neighboring cells?"
+If the problem asks for quick lookups while traversing an array only once, a hashmap is usually worth considering first.
 
 ---
 
 ## 🔗 Challenge Progress
 
-Day 6 / 45 ✅
+Day 7 / 45 ✅
 
 #SDESheetChallenge
 #takeUforward

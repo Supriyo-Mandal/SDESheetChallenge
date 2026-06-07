@@ -1,43 +1,43 @@
-from typing import List
 
 class Solution:
-    # Function to find maximum sum of subarrays
-    def maxSubArray(self, nums: List[int]) -> int:
-        
-        """ Initialize maximum sum with
-         the smallest possible integer"""
-        maxi = float('-inf')
+    def longestConsecutive(self, nums):
+        n = len(nums)
 
-        # Iterate over each starting index of subarrays
-        for i in range(len(nums)):
-            
-            """ Variable to store the sum
-             of the current subarray"""
-            sum = 0
-            
-            """ Iterate over each ending index
-             of subarrays starting from i"""
-            for j in range(i, len(nums)):
-                
-                """ Add the current element nums[j] to
-                 the sum i.e. sum of nums[i...j-1]"""
-                sum += nums[j]
+        # Return 0 if array is empty
+        if n == 0:
+            return 0 
 
-                """ Update maxi with the maximum of its current
-                 value and the sum of the current subarray"""
-                maxi = max(maxi, sum)
+        nums.sort()
 
-        # Return the maximum subarray sum found
-        return maxi
+        # Track last smaller element
+        lastSmaller = float('-inf') 
+        # Count current sequence length
+        cnt = 0 
+        # Track longest sequence length
+        longest = 1 
 
-# Main function to test the Solution class
-if __name__ == "__main__":
-    arr = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+        for i in range(n):
+            # If consecutive number exists
+            if nums[i] - 1 == lastSmaller:
+                # Increment sequence count
+                cnt += 1 
+                # Update last smaller element
+                lastSmaller = nums[i] 
+            # If consecutive number doesn't exist
+            elif nums[i] != lastSmaller:
+                # Reset count for new sequence
+                cnt = 1 
+                # Update last smaller element
+                lastSmaller = nums[i] 
+            # Update longest if needed
+            longest = max(longest, cnt) 
+        return longest
 
-    # Create an instance of Solution class
-    sol = Solution()
+# Sample array
+a = [100, 4, 200, 1, 3, 2]
 
-    maxSum = sol.maxSubArray(arr)
-
-    # Print the max subarray sum
-    print(f"The maximum subarray sum is: {maxSum}")
+# Create an instance of solution class
+solution = Solution() 
+# Function call for finding longest consecutive sequence
+ans = solution.longestConsecutive(a) 
+print("The longest consecutive sequence is", ans)

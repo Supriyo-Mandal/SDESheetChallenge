@@ -1,42 +1,38 @@
-from typing import List
-
 class Solution:
-    # Function to find maximum sum of subarrays
-    def maxSubArray(self, nums: list[int]) -> int:
-        
-        """ Initialize maximum sum with
-        the smallest possible integer"""
-        maxi = float('-inf')
+    # Function to check if any two numbers sum up to target (variant 1)
+    def two_sum_exists(self, arr, target):
+        n = len(arr)
+        # Outer loop picks one element at a time
+        for i in range(n):
+            # Inner loop searches for another element that complements arr[i]
+            for j in range(i + 1, n):
+                # If sum equals target, return "YES"
+                if arr[i] + arr[j] == target:
+                    return "YES"
+        # No pair found that sums to target
+        return "NO"
 
-        # Iterate over each starting index of subarrays
-        for i in range(len(nums)):
-            
-            """ Iterate over each ending index
-            of subarrays starting from i"""
-            for j in range(i, len(nums)):
-                
-                """ Variable to store the sum
-                of the current subarray"""
-                sum = 0
+    # Function to return indices of two numbers that sum to target (variant 2)
+    def two_sum_indices(self, arr, target):
+        n = len(arr)
+        # Outer loop picks one element at a time
+        for i in range(n):
+            # Inner loop searches for another element that complements arr[i]
+            for j in range(i + 1, n):
+                # If sum equals target, return the pair of indices
+                if arr[i] + arr[j] == target:
+                    return [i, j]
+        # No such pair found
+        return [-1, -1]
 
-                # Calculate the sum of subarray nums[i...j]
-                for k in range(i, j + 1):
-                    sum += nums[k]
+if __name__ == "__main__":
+    sol = Solution()
 
-                """ Update maxi with the maximum of itscurrent
-                value and the sum of the current subarray"""
-                maxi = max(maxi, sum)
+    arr = [2, 6, 5, 8, 11]
+    target = 14
 
-        # Return the maximum subarray sum found
-        return maxi
+    # Variant 1
+    print(sol.two_sum_exists(arr, target))
 
-# Test
-arr = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
-
-#create an isinstance of Solution class
-sol = Solution()
-
-maxSum = sol.maxSubArray(arr)
-
-#Print the max sum of subarrays
-print("The maximum subarray sum is:", maxSum)
+    # Variant 2
+    print(sol.two_sum_indices(arr, target))

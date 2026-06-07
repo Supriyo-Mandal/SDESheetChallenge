@@ -1,4 +1,4 @@
-# Day 6 - Grid Unique Paths
+# Day 7 - 4 Sum
 
 > Part of my #SDESheetChallenge journey.
 
@@ -6,17 +6,15 @@
 
 ## 📌 Problem Summary
 
-In this problem, we need to find how many different ways exist to move from the top-left corner of a grid to the bottom-right corner. The only allowed moves are right and down, so the challenge is counting all valid paths without missing any combinations.
+In this problem, we need to find all unique groups of four numbers whose sum equals a given target value. The tricky part is avoiding duplicate quadruplets while making sure all valid combinations are included.
 
 ---
 
 ## 🤔 My First Thought
 
-My first instinct was to try every possible path using recursion.
+My first instinct was to generate every possible group of four numbers and check their sum.
 
-It felt natural because from any cell I only had two choices: move right or move down.
-
-But after drawing a few grids, I noticed I was solving the same positions again and again.
+It felt like the safest way because it guarantees we won't miss any valid quadruplet. But looking at the number of nested loops, it was obvious this wouldn't scale well.
 
 ---
 
@@ -24,16 +22,16 @@ But after drawing a few grids, I noticed I was solving the same positions again 
 
 ### Idea
 
-Use recursion to explore every possible path from the current cell.
+Use four nested loops to generate every possible quadruplet.
 
-At each position, try moving right and down until the destination is reached. Count all valid paths and return the total.
+For each combination, check if the sum equals the target. Store valid quadruplets in a set after sorting them to avoid duplicates.
 
 ### Complexity
 
-| Metric           | Value      |
-| ---------------- | ---------- |
-| Time Complexity  | O(2^(m+n)) |
-| Space Complexity | O(m+n)     |
+| Metric           | Value |
+| ---------------- | ----- |
+| Time Complexity  | O(N⁴) |
+| Space Complexity | O(K)  |
 
 ### File
 
@@ -47,16 +45,16 @@ brute_force.py
 
 ### Idea
 
-Use memoization to store answers for already solved cells.
+Fix the first two numbers using nested loops.
 
-If a cell's path count has been calculated before, reuse it instead of solving the same subproblem again.
+For the remaining part of the array, use a hash set to find the fourth required number while iterating for the third number. Store valid quadruplets in a set to avoid duplicates.
 
 ### Complexity
 
 | Metric           | Value    |
 | ---------------- | -------- |
-| Time Complexity  | O(m × n) |
-| Space Complexity | O(m × n) |
+| Time Complexity  | O(N³)    |
+| Space Complexity | O(N + K) |
 
 ### File
 
@@ -70,16 +68,14 @@ better.py
 
 ### Key Observation
 
-To calculate paths for a cell, we only need values from the current row and the previous row. There is no need to store the entire DP table.
-
-Using two 1D arrays (or even one), we can reduce the space significantly while keeping the same time complexity.
+After sorting the array, fixing two numbers reduces the problem to finding a pair with a specific sum. A two-pointer approach can efficiently search the remaining elements while naturally handling duplicates.
 
 ### Complexity
 
-| Metric           | Value    |
-| ---------------- | -------- |
-| Time Complexity  | O(m × n) |
-| Space Complexity | O(n)     |
+| Metric           | Value                     |
+| ---------------- | ------------------------- |
+| Time Complexity  | O(N³)                     |
+| Space Complexity | O(1) *(excluding output)* |
 
 ### File
 
@@ -91,36 +87,36 @@ optimal.py
 
 ## 🧠 Pattern Used
 
-**Dynamic Programming (DP on Grids)**
+**Two Pointers + Sorting**
 
-The problem contains overlapping subproblems because the number of paths to a cell gets calculated multiple times through different routes.
-
-DP helps store those results and reuse them, turning an exponential solution into a polynomial one.
+Sorting the array creates an ordered structure that allows us to move pointers intelligently instead of checking every combination. Once two numbers are fixed, the remaining search behaves like a classic two-sum problem.
 
 ---
 
 ## 💡 What I Learned
 
-* If recursion revisits the same grid cells repeatedly, DP is probably hiding somewhere.
-* In grid problems, always think about what information is needed from neighboring cells.
-* Space optimization usually comes after understanding the DP transition clearly.
+* Whenever a problem asks for unique triplets or quadruplets, sorting is usually a strong clue.
+* Forgetting to skip duplicates can easily create repeated answers.
+* Reducing a 4-sum problem into a smaller 2-sum search makes the solution much cleaner.
 
 ---
 
 ## 🔍 Complexity Comparison
 
-| Approach    | Time       | Space    |
-| ----------- | ---------- | -------- |
-| Brute Force | O(2^(m+n)) | O(m+n)   |
-| Better      | O(m × n)   | O(m × n) |
-| Optimal     | O(m × n)   | O(n)     |
+| Approach    | Time  | Space    |
+| ----------- | ----- | -------- |
+| Brute Force | O(N⁴) | O(K)     |
+| Better      | O(N³) | O(N + K) |
+| Optimal     | O(N³) | O(1)*    |
+
+* Excluding output storage.
 
 ---
 
 ## 📂 Files
 
 ```text
-Day-6/
+Day-7/
 │
 ├── README.md
 ├── brute_force.py
@@ -132,15 +128,15 @@ Day-6/
 
 ## 🎯 Interview Reminder
 
-Whenever you see a grid and the question asks for the number of ways, paths, or minimum/maximum values, think about Dynamic Programming.
+Keywords like **unique quadruplets**, **target sum**, **avoid duplicates**, or **k-sum problems** should immediately make me think about sorting and two pointers.
 
-A useful hint is to ask: "Can the answer for this cell be built using answers from neighboring cells?"
+If the brute-force solution involves multiple nested loops, check whether fixing a few elements can reduce the remaining problem into a simpler sum-search pattern.
 
 ---
 
 ## 🔗 Challenge Progress
 
-Day 6 / 45 ✅
+Day 7 / 45 ✅
 
 #SDESheetChallenge
 #takeUforward

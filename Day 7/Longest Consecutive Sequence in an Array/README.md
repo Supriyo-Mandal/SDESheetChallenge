@@ -1,4 +1,4 @@
-# Day 6 - Grid Unique Paths
+# Day 7 - Longest Consecutive Sequence
 
 > Part of my #SDESheetChallenge journey.
 
@@ -6,17 +6,15 @@
 
 ## 📌 Problem Summary
 
-In this problem, we need to find how many different ways exist to move from the top-left corner of a grid to the bottom-right corner. The only allowed moves are right and down, so the challenge is counting all valid paths without missing any combinations.
+In this problem, we need to find the length of the longest sequence of consecutive numbers present in an array. The numbers can appear in any order, and we only care about the longest chain of consecutive values.
 
 ---
 
 ## 🤔 My First Thought
 
-My first instinct was to try every possible path using recursion.
+My first instinct was to pick every number and keep checking if the next consecutive number existed in the array.
 
-It felt natural because from any cell I only had two choices: move right or move down.
-
-But after drawing a few grids, I noticed I was solving the same positions again and again.
+It felt natural because I could build the sequence one number at a time. I knew it would work, but I also had a feeling it would become slow once the array got bigger.
 
 ---
 
@@ -24,16 +22,14 @@ But after drawing a few grids, I noticed I was solving the same positions again 
 
 ### Idea
 
-Use recursion to explore every possible path from the current cell.
-
-At each position, try moving right and down until the destination is reached. Count all valid paths and return the total.
+For every element, keep searching for the next consecutive number using a linear search. Continue until the sequence breaks and track the maximum length found.
 
 ### Complexity
 
-| Metric           | Value      |
-| ---------------- | ---------- |
-| Time Complexity  | O(2^(m+n)) |
-| Space Complexity | O(m+n)     |
+| Metric           | Value |
+| ---------------- | ----- |
+| Time Complexity  | O(N²) |
+| Space Complexity | O(1)  |
 
 ### File
 
@@ -47,16 +43,14 @@ brute_force.py
 
 ### Idea
 
-Use memoization to store answers for already solved cells.
-
-If a cell's path count has been calculated before, reuse it instead of solving the same subproblem again.
+Sort the array first so consecutive numbers come together. Then scan the sorted array while counting the current streak and updating the longest sequence length.
 
 ### Complexity
 
-| Metric           | Value    |
-| ---------------- | -------- |
-| Time Complexity  | O(m × n) |
-| Space Complexity | O(m × n) |
+| Metric           | Value      |
+| ---------------- | ---------- |
+| Time Complexity  | O(N log N) |
+| Space Complexity | O(1)       |
 
 ### File
 
@@ -70,16 +64,14 @@ better.py
 
 ### Key Observation
 
-To calculate paths for a cell, we only need values from the current row and the previous row. There is no need to store the entire DP table.
-
-Using two 1D arrays (or even one), we can reduce the space significantly while keeping the same time complexity.
+A number only needs to start building a sequence if the previous number doesn't exist. Using a set allows constant-time lookups, so we can grow sequences efficiently without repeatedly checking the same elements.
 
 ### Complexity
 
-| Metric           | Value    |
-| ---------------- | -------- |
-| Time Complexity  | O(m × n) |
-| Space Complexity | O(n)     |
+| Metric           | Value |
+| ---------------- | ----- |
+| Time Complexity  | O(N)  |
+| Space Complexity | O(N)  |
 
 ### File
 
@@ -91,36 +83,34 @@ optimal.py
 
 ## 🧠 Pattern Used
 
-**Dynamic Programming (DP on Grids)**
+* Hashing
 
-The problem contains overlapping subproblems because the number of paths to a cell gets calculated multiple times through different routes.
-
-DP helps store those results and reuse them, turning an exponential solution into a polynomial one.
+The set is the real game changer here. Instead of searching the array again and again, we store all elements in a hash set and quickly check whether consecutive numbers exist. The trick is to start counting only from the beginning of a sequence.
 
 ---
 
 ## 💡 What I Learned
 
-* If recursion revisits the same grid cells repeatedly, DP is probably hiding somewhere.
-* In grid problems, always think about what information is needed from neighboring cells.
-* Space optimization usually comes after understanding the DP transition clearly.
+* If a problem involves frequent existence checks, a set is usually worth considering.
+* Starting from every element causes a lot of unnecessary work.
+* The clue was realizing that only sequence starters actually matter.
 
 ---
 
 ## 🔍 Complexity Comparison
 
-| Approach    | Time       | Space    |
-| ----------- | ---------- | -------- |
-| Brute Force | O(2^(m+n)) | O(m+n)   |
-| Better      | O(m × n)   | O(m × n) |
-| Optimal     | O(m × n)   | O(n)     |
+| Approach    | Time       | Space |
+| ----------- | ---------- | ----- |
+| Brute Force | O(N²)      | O(1)  |
+| Better      | O(N log N) | O(1)  |
+| Optimal     | O(N)       | O(N)  |
 
 ---
 
 ## 📂 Files
 
 ```text
-Day-6/
+Day-7/
 │
 ├── README.md
 ├── brute_force.py
@@ -132,15 +122,15 @@ Day-6/
 
 ## 🎯 Interview Reminder
 
-Whenever you see a grid and the question asks for the number of ways, paths, or minimum/maximum values, think about Dynamic Programming.
+Whenever you see words like "longest consecutive", "sequence", or "find if a number exists", think about hashing before jumping into sorting.
 
-A useful hint is to ask: "Can the answer for this cell be built using answers from neighboring cells?"
+A useful hint is asking: "Do I really need to start from every element?" If the answer is no, there's usually a smarter way.
 
 ---
 
 ## 🔗 Challenge Progress
 
-Day 6 / 45 ✅
+Day 7 / 45 ✅
 
 #SDESheetChallenge
 #takeUforward

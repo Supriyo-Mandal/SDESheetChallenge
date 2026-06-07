@@ -1,39 +1,62 @@
-from typing import List
-
 class Solution:
-    # Function to find maximum sum of subarrays
-    def maxSubArray(self, nums: List[int]) -> int:
+    # Variant 1: Check if two numbers sum to target using two-pointer approach
+    def two_sum_exists(self, arr, target):
+        # Create list of tuples (value, original_index)
+        nums_with_index = [(num, idx) for idx, num in enumerate(arr)]
         
-        # maximum sum
-        maxi = float('-inf') 
+        # Sort list based on the values (to apply two-pointer technique)
+        nums_with_index.sort(key=lambda x: x[0])
+
+        # Initialize two pointers: left at start, right at end
+        left, right = 0, len(arr) - 1
         
-        # current sum of subarray
-        sum = 0 
-        
-        # Iterate through the array
-        for i in range(len(nums)):
+        # Continue until pointers cross
+        while left < right:
+            # Calculate sum of values at pointers
+            current_sum = nums_with_index[left][0] + nums_with_index[right][0]
             
-            # Add current element to the sum
-            sum += nums[i] 
-            
-            # Update maxi if current sum is greater
-            if sum > maxi:
-                maxi = sum 
-            
-            # Reset sum to 0 if it becomes negative
-            if sum < 0:
-                sum = 0 
+            if current_sum == target:
+                # Found a pair
+                return "YES"
+            elif current_sum < target:
+                # Sum too small, move left pointer to right to increase sum
+                left += 1
+            else:
+                # Sum too large, move right pointer to left to decrease sum
+                right -= 1
         
-        # Return the maximum subarray sum found
-        return maxi
+        # No pair found
+        return "NO"
+
+    # Variant 2: Return indices of two numbers that sum to target
+    def two_sum_indices(self, arr, target):
+        # Create list of tuples (value, original_index)
+        nums_with_index = [(num, idx) for idx, num in enumerate(arr)]
+        
+        # Sort the list by values
+        nums_with_index.sort(key=lambda x: x[0])
+
+        left, right = 0, len(arr) - 1
+        
+        while left < right:
+            current_sum = nums_with_index[left][0] + nums_with_index[right][0]
+            if current_sum == target:
+                # Return original indices of found elements
+                return [nums_with_index[left][1], nums_with_index[right][1]]
+            elif current_sum < target:
+                # Move left pointer right to increase sum
+                left += 1
+            else:
+                # Move right pointer left to decrease sum
+                right -= 1
+        
+        # No valid pair found
+        return [-1, -1]
 
 if __name__ == "__main__":
-    arr = [ -2, 1, -3, 4, -1, 2, 1, -5, 4 ]
-
-    # Create an instance of Solution class
     sol = Solution()
+    arr = [2, 6, 5, 8, 11]
+    target = 14
 
-    maxSum = sol.maxSubArray(arr)
-
-    # Print the max subarray sum
-    print(f"The maximum subarray sum is: {maxSum}")
+    print(sol.two_sum_exists(arr, target))  # Output: YES
+    print(sol.two_sum_indices(arr, target)) # Output: [1, 3]

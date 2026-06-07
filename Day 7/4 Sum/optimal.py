@@ -1,39 +1,45 @@
-from typing import List
-
 class Solution:
-    # Function to find maximum sum of subarrays
-    def maxSubArray(self, nums: List[int]) -> int:
-        
-        # maximum sum
-        maxi = float('-inf') 
-        
-        # current sum of subarray
-        sum = 0 
-        
-        # Iterate through the array
-        for i in range(len(nums)):
-            
-            # Add current element to the sum
-            sum += nums[i] 
-            
-            # Update maxi if current sum is greater
-            if sum > maxi:
-                maxi = sum 
-            
-            # Reset sum to 0 if it becomes negative
-            if sum < 0:
-                sum = 0 
-        
-        # Return the maximum subarray sum found
-        return maxi
+    # Function to find all unique quadruplets
+    def fourSum(self, arr, target):
+        n = len(arr)
+        arr.sort()
+        ans = []
 
-if __name__ == "__main__":
-    arr = [ -2, 1, -3, 4, -1, 2, 1, -5, 4 ]
+        # Step 1: First loop for first number
+        for i in range(n):
+            if i > 0 and arr[i] == arr[i - 1]:
+                continue
 
-    # Create an instance of Solution class
-    sol = Solution()
+            # Step 2: Second loop for second number
+            for j in range(i + 1, n):
+                if j > i + 1 and arr[j] == arr[j - 1]:
+                    continue
 
-    maxSum = sol.maxSubArray(arr)
+                # Step 3: Two pointers
+                left, right = j + 1, n - 1
+                while left < right:
+                    total = arr[i] + arr[j] + arr[left] + arr[right]
 
-    # Print the max subarray sum
-    print(f"The maximum subarray sum is: {maxSum}")
+                    if total == target:
+                        ans.append([arr[i], arr[j], arr[left], arr[right]])
+
+                        while left < right and arr[left] == arr[left + 1]:
+                            left += 1
+                        while left < right and arr[right] == arr[right - 1]:
+                            right -= 1
+
+                        left += 1
+                        right -= 1
+                    elif total < target:
+                        left += 1
+                    else:
+                        right -= 1
+        return ans
+
+
+# Driver code
+arr = [1, 0, -1, 0, -2, 2]
+target = 0
+
+obj = Solution()
+print(obj.fourSum(arr, target))
